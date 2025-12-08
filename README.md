@@ -11,13 +11,17 @@ Versão de demonstração pública do sistema de gestão de reciclagem desenvolv
 
 > **Demonstração de Portfólio:** Este repositório contém dados fictícios gerados localmente. A versão em produção opera com PostgreSQL, Oracle Database, túneis SSH e autenticação JWT completa.
 
+![recicle-hub-public](frontend/src/assets/recicle-hub-public.gif)
+
+https://lucaswotta.github.io/recicle-hub-public/
+
 ---
 
 ## Contexto do Projeto Original
 
 ### Visão Geral
 
-Sistema full-stack desenvolvido para centralizar a gestão de reciclagem corporativa, incluindo cadastro de catadores, registro de pesagens, dados financeiros e geração de relatórios gerenciais para auditoria.
+Sistema full-stack desenvolvido para centralizar a gestão de reciclagem corporativa, incluindo cadastro de recicladores, registro de pesagens, dados financeiros e geração de variados relatórios para auditoria.
 
 ### Arquitetura de Produção
 
@@ -37,7 +41,7 @@ graph LR
     end
 ```
 
-### Stack Tecnológico
+### Stack Tecnológica
 
 **Backend:**
 - Node.js 18 + Express
@@ -63,16 +67,20 @@ graph LR
 - Deploy automatizado via shell script
 - Logs rotativos (pm2-logrotate)
 
-### Funcionalidades Implementadas
+---
 
-**Dashboard Executivo:**
+## Funcionalidades Implementadas
+
+### Dashboard Inicial
+
 - Query consolidada única (redução de 87.5% em consultas)
 - Cache HTTP de 2 minutos
 - Gráficos interativos D3.js (barras, pizza, linha)
 - Métricas em tempo real (clientes, reciclagem, receita)
 - Ranking de performance
 
-**Gestão de Clientes:**
+### Gestão de Clientes
+
 - CRUD completo com validação
 - Paginação dinâmica (ajusta por altura disponível)
 - Filtros avançados (busca, tipo PF/PJ, status)
@@ -80,14 +88,16 @@ graph LR
 - Reset de senha com hash bcrypt
 - Auditoria de alterações
 
-**Relatórios Financeiros:**
+### Relatórios Financeiros
+
 - Geração de Excel (.xlsx) com ExcelJS
 - Proteção por senha configurável
 - Estilização de headers e totalizadores
 - Suporte a filtros de data
 - 6 tipos de relatórios (saldo, resgates, clientes, transações, reciclagem, ranking)
 
-**Segurança:**
+### Segurança
+
 - Autenticação JWT com rotação de refresh token
 - Access token em memória (15min)
 - Refresh token HTTP-only cookie (7 dias)
@@ -97,7 +107,8 @@ graph LR
 - RBAC (Admin, Support, Viewer)
 - Logs de auditoria no Oracle
 
-**Performance:**
+### Performance
+
 - Change Detection OnPush em 100% dos componentes
 - Signals API para memoização automática
 - Lazy loading de dados
@@ -166,7 +177,7 @@ npm 9+
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/recicle-hub-public.git
+git clone https://github.com/lucaswotta/recicle-hub-public.git
 cd recicle-hub-public
 
 # Instale dependências
@@ -214,9 +225,8 @@ frontend/src/
 │   ├── guards/             # Route guards (RBAC)
 │   ├── interceptors/       # HTTP interceptors
 │   ├── models/             # Interfaces TypeScript
-│   └── mocks/              # Dados mockados [NOVO]
-├── environments/           # Configurações de ambiente
-└── styles/                # TailwindCSS global
+│   └── mocks/              # Dados mockados
+└── environments/           # Configurações de ambiente
 ```
 
 ### Backend (Referência)
@@ -240,67 +250,6 @@ backend/
 
 ---
 
-## Padrões de Código
-
-### Frontend
-
-**Convenções TypeScript:**
-```typescript
-// Componente Standalone com OnPush
-@Component({
-    selector: 'app-example',
-    templateUrl: './example.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ReactiveFormsModule]
-})
-export class ExampleComponent {
-    private service = inject(ExampleService);
-    
-    // Signals para reatividade
-    data = signal<Data[]>([]);
-    loading = signal(false);
-    
-    // Computed para memoização
-    filteredData = computed(() => {
-        return this.data().filter(item => item.active);
-    });
-}
-```
-
-**Estilo:**
-- Indentação: 2 espaços
-- Aspas: Simples
-- Ponto e vírgula: Obrigatório
-- Nomenclatura: camelCase (variáveis), PascalCase (classes)
-
-### Backend
-
-**Convenções Node.js:**
-```javascript
-// Validação com Zod
-const schema = z.object({
-    name: z.string().min(3),
-    email: z.string().email(),
-    status: z.enum(['Ativo', 'Inativo'])
-});
-
-const validation = schema.safeParse(req.body);
-if (!validation.success) {
-    return res.status(400).json({ 
-        error: 'Dados inválidos', 
-        details: validation.error.errors 
-    });
-}
-```
-
-**Estilo:**
-- Indentação: 4 espaços
-- Aspas: Simples
-- Ponto e vírgula: Obrigatório
-- Nomenclatura: camelCase (variáveis), PascalCase (classes)
-
----
-
 ## Comparação: Demo vs Produção
 
 | Aspecto | Demo Pública | Produção |
@@ -311,7 +260,7 @@ if (!validation.success) {
 | Infraestrutura | Localhost apenas | PM2 + Nginx + Apache + SSH Tunnel |
 | Relatórios | Gerados em memória | Excel protegido por senha |
 | Logs | Fictícios | Oracle Database (auditoria completa) |
-| Deploy | Não aplicável | Script automatizado + CI/CD |
+| Deploy | Github Pages | Script automatizado + CI/CD |
 | Performance | Cliente apenas | Cache HTTP + Pool de conexões |
 | Segurança | Sem validação real | OWASP + Rate Limiting + CORS |
 
@@ -358,18 +307,7 @@ if (!validation.success) {
 - [x] Gerenciamento de processos (PM2)
 - [x] Rotação de logs
 - [x] Variáveis de ambiente
-- [x] Documentação técnica completa
-
----
-
-## Build de Produção
-
-Caso queira gerar o build otimizado:
-
-```bash
-cd frontend
-npm run build
-```
+- [x] Documentação técnica
 
 **Otimizações aplicadas:**
 - Ahead-of-Time (AOT) compilation
@@ -384,5 +322,7 @@ npm run build
 
 Este projeto de demonstração é distribuído sob licença MIT. Veja [LICENSE](LICENSE) para detalhes.
 
-Desenvolvido por **Lucas Motta**  
+---
+
+**Desenvolvido por Lucas Motta**  
 [GitHub](https://github.com/lucaswotta) • [LinkedIn](https://www.linkedin.com/in/lucaswotta)
