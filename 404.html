@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-beasties-container>
+
+<head>
+  <meta charset="utf-8">
+  <title>Recicle Hub</title>
+  <base href="/recicle-hub-public/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* Modern CSS Reset */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      line-height: 1.5;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    app-root {
+      display: block;
+      height: 100%;
+    }
+
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    /* Custom scrollbar for a more modern look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      /* slate-100 */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      /* slate-400 */
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+      /* slate-500 */
+    }
+
+    /* Scrollbar mais discreto/branco para áreas específicas */
+    .scrollbar-light::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .scrollbar-light::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .scrollbar-light::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      /* slate-200 */
+      border-radius: 10px;
+    }
+
+    .scrollbar-light::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+      /* slate-300 */
+    }
+
+    /* Modal Fade-in Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .animate-fade-in-slow {
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    /* Custom styles for date input to ensure picker is visible and styled consistently */
+    input[type="date"] {
+      position: relative;
+    }
+
+    /* This makes the whole input clickable to open the picker, and hides the native icon */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      color: transparent;
+      background: transparent;
+      cursor: pointer;
+    }
+  </style>
+  <script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.3.10?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.3.10?external=rxjs",
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.10?external=rxjs",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.3.10?external=rxjs",
+    "@angular/common/locales/pt": "https://next.esm.sh/@angular/common@^20.3.10/locales/pt?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.3.10?external=rxjs",
+    "@angular/router": "https://next.esm.sh/@angular/router@^20.3.10?external=rxjs",
+    "@angular/core/rxjs-interop": "https://next.esm.sh/@angular/core@^20.3.10/rxjs-interop?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^21.0.0/http?external=rxjs"
+  }
+}
+</script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans">
+  <app-root></app-root>
+<script src="main-4V4K3X2W.js" type="module"></script></body>
+
+</html>
