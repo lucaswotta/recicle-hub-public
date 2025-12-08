@@ -1,0 +1,18 @@
+@if (toast(); as toastData) {
+<div
+  class="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center p-4 space-x-4 text-white border-l-4 rounded-lg shadow-lg animate-fade-in"
+  [class]="getClasses(toastData.type)" role="alert" aria-live="assertive">
+  <div class="flex-shrink-0">
+    <i [attr.data-lucide]="getIcon(toastData.type)" class="w-6 h-6"></i>
+  </div>
+
+  <div class="text-sm font-medium">
+    {{ toastData.message }}
+  </div>
+
+  <button (click)="toastService.hide()"
+    class="ml-auto -mx-1.5 -my-1.5 p-1.5 rounded-full hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50">
+    <i data-lucide="x" class="w-5 h-5"></i>
+  </button>
+</div>
+}

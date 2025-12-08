@@ -1,0 +1,11 @@
+<app-toast></app-toast>
+@if (authService.isLoggedIn()) {
+<div class="flex h-full bg-slate-100 font-sans">
+  <app-sidebar></app-sidebar>
+  <main class="flex-1 overflow-y-auto overscroll-y-contain">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+} @else {
+<router-outlet></router-outlet>
+}

@@ -1,0 +1,71 @@
+###############################################
+# MONOREPO - NODE + ANGULAR
+###############################################
+
+# =============================================
+# GLOBAL - DEPENDÊNCIAS / LOGS / SISTEMA
+# =============================================
+
+# Dependências (qualquer pacote dentro do monorepo)
+node_modules/
+
+# Logs gerais
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Cache e artefatos temporários
+*.local
+.history/
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Editores / IDEs
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# =============================================
+# AMBIENTE / SEGURANÇA (GLOBAL)
+# =============================================
+
+# Variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Chaves privadas e certificados
+*.pem
+*.key
+*.ppk
+id_rsa
+**/key/
+
+# =============================================
+# FRONTEND (ANGULAR)
+# =============================================
+frontend/dist/
+frontend/tmp/
+frontend/.angular/
+frontend/.cache/
+frontend/coverage/
+
+# =============================================
+# BACKEND (NODE / EXPRESS / NEST / ETC)
+# =============================================
+backend/dist/
+backend/uploads/
+backend/temp/

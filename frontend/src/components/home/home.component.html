@@ -1,0 +1,348 @@
+<div class="flex flex-col lg:h-full p-4 gap-4 select-none">
+
+  <!-- #region Statistical Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+    @if (loading()) {
+    <!-- Loading Skeletons -->
+    @for (_ of [1,2,3,4]; track _) {
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
+      <div class="animate-pulse">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-slate-200"></div>
+          <div class="space-y-3 flex-1">
+            <div class="h-4 bg-slate-200 rounded w-24"></div>
+            <div class="h-7 bg-slate-200 rounded w-32"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+    } @else {
+
+    <!-- Card: Total Clients -->
+    <div
+      class="group relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-4 animate-fade-in-slow">
+      <div class="p-3 rounded-xl bg-slate-50 flex-shrink-0">
+        <i data-lucide="users" class="w-6 h-6 text-[#10B981]"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-slate-600">Total de Clientes</p>
+        <p class="text-xl font-bold text-slate-900 mt-1">{{ stats()?.totalClients ?? 0 }}</p>
+      </div>
+      <!-- Tooltip -->
+      <div
+        class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 bg-slate-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 delay-700 z-20 pointer-events-none text-center shadow-lg">
+        Total de clientes cadastrados na plataforma.
+        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+      </div>
+    </div>
+
+    <!-- Card: Active Balance -->
+    <div
+      class="group relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-4 animate-fade-in-slow">
+      <div class="p-3 rounded-xl bg-slate-50 flex-shrink-0">
+        <i data-lucide="dollar-sign" class="w-6 h-6 text-[#10B981]"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-slate-600">Saldo Ativo</p>
+        <p class="text-xl font-bold text-slate-900 mt-1 truncate">
+        <p class="text-xl font-bold text-slate-900 mt-1 truncate">
+          @if (balanceVisible()) {
+          {{ formatBalance(stats()?.totalBalance ?? 0) }}
+          } @else {
+          R$ ••••••
+          }
+        </p>
+      </div>
+      <button (click)="toggleBalanceVisibility()" aria-label="Alternar visibilidade do saldo"
+        class="ml-2 p-2 rounded-lg hover:bg-slate-100 transition-colors"
+        [title]="balanceVisible() ? 'Ocultar saldo' : 'Mostrar saldo'">
+        <i data-lucide="eye" class="w-5 h-5" [class.hidden]="balanceVisible()"></i>
+        <i data-lucide="eye-off" class="w-5 h-5" [class.hidden]="!balanceVisible()"></i>
+      </button>
+      <!-- Tooltip -->
+      <div
+        class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 bg-slate-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 delay-700 z-20 pointer-events-none text-center shadow-lg">
+        Soma dos saldos disponíveis de todos os clientes.
+        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+      </div>
+    </div>
+
+    <!-- Card: Total Recycled -->
+    <div
+      class="group relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-4 animate-fade-in-slow">
+      <div class="p-3 rounded-xl bg-slate-50 flex-shrink-0">
+        <i data-lucide="recycle" class="w-6 h-6 text-[#10B981]"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-slate-600">Total Reciclado</p>
+        <p class="text-xl font-bold text-slate-900 mt-1">
+          {{ ((stats()?.totalRecycled ?? 0) / 1000) | number:'1.1-1':'pt' }} t
+        </p>
+      </div>
+      <!-- Tooltip -->
+      <div
+        class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 bg-slate-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 delay-700 z-20 pointer-events-none text-center shadow-lg">
+        Peso total reciclado desde o início da operação.
+        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+      </div>
+    </div>
+
+    <!-- Card: New Registrations Today -->
+    <div
+      class="group relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-4 animate-fade-in-slow">
+      <div class="p-3 rounded-xl bg-slate-50 flex-shrink-0">
+        <i data-lucide="user-plus" class="w-6 h-6 text-[#10B981]"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium text-slate-600">Cadastros Hoje</p>
+        <p class="text-xl font-bold text-slate-900 mt-1">{{ stats()?.newRegistrations ?? 0 }}</p>
+      </div>
+      <!-- Tooltip -->
+      <div
+        class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 bg-slate-800 text-white text-xs rounded-lg p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 delay-700 z-20 pointer-events-none text-center shadow-lg">
+        Novos clientes registrados no dia de hoje.
+        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+      </div>
+    </div>
+
+    }
+  </div>
+  <!-- #endregion -->
+
+  <!-- #region Charts & Ranking -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-4 lg:flex-1 lg:min-h-0">
+
+    <!-- Chart: Recycling per Month -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col h-full">
+      @if (!loading()) {
+      <div class="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 class="text-base font-semibold text-slate-900">Reciclagens</h3>
+        <div class="group relative">
+          <button class="text-slate-400 hover:text-slate-600"><i data-lucide="info" class="w-5 h-5"></i></button>
+          <div
+            class="absolute right-0 top-full mt-2 w-64 bg-slate-900 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition z-10 pointer-events-none">
+            Volume total de materiais reciclados por mês nos últimos 6 meses
+            <div class="absolute -top-1 right-3 w-3 h-3 bg-slate-900 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+      }
+
+      @if (loading()) {
+      <!-- Skeleton Chart -->
+      <div class="flex-1">
+        <div class="flex h-full items-end justify-between gap-2 px-4 pb-4 animate-pulse">
+          <div class="w-1/6 h-1/3 bg-slate-200 rounded-md"></div>
+          <div class="w-1/6 h-2/3 bg-slate-200 rounded-md"></div>
+          <div class="w-1/6 h-full bg-slate-200 rounded-md"></div>
+          <div class="w-1/6 h-3/4 bg-slate-200 rounded-md"></div>
+          <div class="w-1/6 h-1/2 bg-slate-200 rounded-md"></div>
+          <div class="w-1/6 h-2/3 bg-slate-200 rounded-md"></div>
+        </div>
+      </div>
+      } @else {
+      <!-- Mobile List (Fallback) -->
+      <div class="lg:hidden flex-1 overflow-y-auto min-h-0">
+        <ul class="space-y-3">
+          @for (item of recyclingData(); track item.month) {
+          <li class="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+            <span class="text-slate-700 font-medium">{{ item.month }}</span>
+            <span class="font-bold text-slate-900">{{ (item.value / 1000) | number:'1.1-1':'pt' }} t</span>
+          </li>
+          } @empty {
+          <li class="text-center py-8 text-slate-500">Sem dados</li>
+          }
+        </ul>
+      </div>
+
+      <!-- D3.js Container (Desktop) -->
+      <div #barChart class="hidden lg:block flex-1 min-h-0 relative animate-fade-in-slow"></div>
+      }
+    </div>
+
+    <!-- Chart: Materials Distribution -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col h-full">
+      @if (!loading()) {
+      <div class="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 class="text-base font-semibold text-slate-900">Materiais</h3>
+        <div class="group relative">
+          <button class="text-slate-400 hover:text-slate-600"><i data-lucide="info" class="w-5 h-5"></i></button>
+          <div
+            class="absolute right-0 top-full mt-2 w-64 bg-slate-900 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition z-10 pointer-events-none">
+            Distribuição dos tipos de materiais reciclados
+            <div class="absolute -top-1 right-3 w-3 h-3 bg-slate-900 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+      }
+
+      @if (loading()) {
+      <div class="flex-1">
+        <div class="flex h-full items-center justify-center animate-pulse">
+          <div class="w-40 h-40 md:w-48 md:h-48 rounded-full bg-slate-200 relative">
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full">
+            </div>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="lg:hidden flex-1 overflow-y-auto min-h-0">
+        <ul class="space-y-3">
+          @for (item of materialsData(); track item.category) {
+          <li class="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+            <span class="text-slate-700 font-medium">{{ item.category }}</span>
+            <span class="font-bold text-slate-900">{{ item.value | number:'1.0-0':'pt' }} kg</span>
+          </li>
+          } @empty {
+          <li class="text-center py-8 text-slate-500">Sem dados</li>
+          }
+        </ul>
+      </div>
+      <div #pieChart class="hidden lg:block flex-1 min-h-0 relative animate-fade-in-slow"></div>
+
+      <!-- Legend (Desktop only) -->
+      @if (!loading()) {
+      <div class="hidden lg:flex flex-wrap gap-x-4 gap-y-2 mt-3 justify-center">
+        @for (item of materialsData(); track item.category) {
+        <div class="materials-legend-item flex items-center gap-1.5 cursor-pointer transition-opacity hover:opacity-70"
+          (mouseenter)="highlightPieSlice($index, true)" (mouseleave)="highlightPieSlice($index, false)">
+          <div class="w-2 h-2" [style.background-color]="getMaterialColor($index)"></div>
+          <span class="text-[10px] text-slate-600">{{ item.category }}</span>
+        </div>
+        }
+      </div>
+      }
+      }
+    </div>
+
+    <!-- Chart: Registrations per Month -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col h-full">
+      @if (!loading()) {
+      <div class="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 class="text-base font-semibold text-slate-900">Cadastros</h3>
+        <div class="group relative">
+          <button class="text-slate-400 hover:text-slate-600"><i data-lucide="info" class="w-5 h-5"></i></button>
+          <div
+            class="absolute right-0 top-full mt-2 w-64 bg-slate-900 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition z-10 pointer-events-none">
+            Novos cadastros de clientes por mês nos últimos 6 meses
+            <div class="absolute -top-1 right-3 w-3 h-3 bg-slate-900 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+      }
+
+      @if (loading()) {
+      <div class="flex-1">
+        <div class="flex h-full flex-col justify-between p-4 animate-pulse">
+          <div class="w-full h-3/4 bg-slate-200 rounded-md"></div>
+          <div class="flex justify-between mt-4">
+            <div class="w-8 h-3 bg-slate-200 rounded"></div>
+            <div class="w-8 h-3 bg-slate-200 rounded"></div>
+            <div class="w-8 h-3 bg-slate-200 rounded"></div>
+            <div class="w-8 h-3 bg-slate-200 rounded"></div>
+            <div class="w-8 h-3 bg-slate-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="lg:hidden flex-1 overflow-y-auto min-h-0">
+        <ul class="space-y-3">
+          @for (item of registrationsData(); track item.month) {
+          <li class="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+            <span class="text-slate-700 font-medium">{{ item.month }}</span>
+            <span class="font-bold text-slate-900">{{ item.value }}</span>
+          </li>
+          } @empty {
+          <li class="text-center py-8 text-slate-500">Sem dados</li>
+          }
+        </ul>
+      </div>
+      <div #lineChart class="hidden lg:block flex-1 min-h-0 relative animate-fade-in-slow"></div>
+      }
+    </div>
+
+    <!-- List: Client Ranking -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col h-full">
+      @if (!loading()) {
+      <div class="flex items-center justify-between mb-2 flex-shrink-0">
+        <h3 class="text-base font-semibold text-slate-900">Ranking</h3>
+        <div class="group relative">
+          <button class="text-slate-400 hover:text-slate-600"><i data-lucide="info" class="w-5 h-5"></i></button>
+          <div
+            class="absolute right-0 top-full mt-2 w-64 bg-slate-900 text-white text-xs rounded-lg p-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition z-10 pointer-events-none">
+            Ranking de clientes por peso total reciclado (kg)
+            <div class="absolute -top-1 right-3 w-3 h-3 bg-slate-900 rotate-45"></div>
+          </div>
+        </div>
+      </div>
+      }
+      <div class="flex-1 overflow-y-auto min-h-0 pr-2 scrollbar-light">
+        @if (loading()) {
+        <div class="h-full overflow-hidden">
+          <div class="space-y-4 p-1 animate-pulse h-full">
+            @for (_ of [1,2,3,4,5,6,7]; track _) {
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 bg-slate-200 rounded-md"></div>
+              <div class="flex-1 space-y-2">
+                <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+                <div class="h-3 bg-slate-200 rounded w-1/4"></div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        } @else {
+        <ol class="flex flex-col animate-fade-in-slow">
+          @for (client of topClients(); track client.id; let i = $index; let last = $last) {
+          <li class="flex items-center gap-3 py-3" [class.border-b]="!last" [class.border-slate-100]="!last">
+            <div class="flex-shrink-0">
+              @switch (i) {
+              @case (0) {
+              <!-- 1st Place -->
+              <div
+                class="w-8 h-8 rounded-md bg-yellow-100 border border-yellow-200 flex items-center justify-center text-sm font-bold text-yellow-700">
+                1</div>
+              }
+              @case (1) {
+              <!-- 2nd Place -->
+              <div
+                class="w-8 h-8 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center text-sm font-bold text-slate-700">
+                2</div>
+              }
+              @case (2) {
+              <!-- 3rd Place -->
+              <div
+                class="w-8 h-8 rounded-md bg-orange-100 border border-orange-200 flex items-center justify-center text-sm font-bold text-orange-800">
+                3</div>
+              }
+              @default {
+              <!-- Others -->
+              <div
+                class="w-8 h-8 rounded-md bg-slate-50 flex items-center justify-center text-sm font-bold text-slate-500">
+                {{ i + 1 }}</div>
+              }
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-slate-900 truncate" [title]="client.name">{{ client.name }}</p>
+              <div class="flex items-center gap-1 text-xs text-slate-600 mt-0.5">
+                <i data-lucide="package" class="w-3 h-3"></i>
+                <span>{{ formatKg(client.recycledKg) }}</span>
+              </div>
+            </div>
+          </li>
+          } @empty {
+          <p class="text-center text-slate-500 py-8">Nenhum cliente no ranking</p>
+          }
+        </ol>
+        }
+      </div>
+    </div>
+
+  </div>
+  <!-- #endregion -->
+
+</div>

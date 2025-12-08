@@ -1,0 +1,535 @@
+<div class="flex flex-col lg:h-full p-2 sm:p-4 gap-3 sm:gap-4 select-none">
+  <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden flex flex-col flex-1 min-h-0">
+
+    <!-- #region Header (Search & Filters) -->
+    <div
+      class="flex flex-col-reverse lg:flex-row lg:items-center justify-between p-3 sm:p-4 gap-3 sm:gap-4 border-b border-slate-100">
+      <div class="flex flex-row gap-2 sm:gap-3 flex-1">
+
+        <!-- Search Input -->
+        <div class="relative flex-1 sm:flex-none sm:w-80 md:w-96 group">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i data-lucide="search"
+              class="w-4 h-4 text-slate-400 group-focus-within:text-emerald-500 transition-colors"></i>
+          </div>
+          <label for="client-search" class="sr-only">Buscar clientes</label>
+          <input id="client-search" name="search" type="text" [value]="searchTerm()" (input)="onSearch($event)"
+            placeholder="Buscar..."
+            class="block w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-2 text-xs sm:text-sm border border-slate-200 rounded-lg leading-5 bg-white placeholder-slate-400 shadow-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all" />
+          @if (searchTerm()) {
+          <button (click)="clearSearch()" aria-label="Limpar busca"
+            class="absolute inset-y-0 right-0 pr-2 sm:pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
+            title="Limpar busca">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+          }
+        </div>
+
+        <!-- Filter Button & Menu -->
+        <div class="relative" #filterContainer>
+          <button (click)="toggleFilters()" aria-label="Abrir filtros"
+            class="p-2 h-full rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors flex items-center justify-center relative"
+            [class.bg-emerald-50]="showFilters() || typeFilter() !== 'all' || statusFilter() !== 'all'"
+            [class.border-emerald-200]="showFilters() || typeFilter() !== 'all' || statusFilter() !== 'all'"
+            [class.text-emerald-600]="showFilters() || typeFilter() !== 'all' || statusFilter() !== 'all'"
+            title="Filtros">
+            <i data-lucide="filter" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            @if (typeFilter() !== 'all' || statusFilter() !== 'all') {
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-600 rounded-full border border-white"></span>
+            }
+          </button>
+
+          @if (showFilters()) {
+          <div
+            class="absolute top-full right-0 sm:right-auto sm:left-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-100 p-4 z-20 animate-fade-in origin-top-right sm:origin-top-left">
+
+            <!-- Type Filter -->
+            <div class="mb-4">
+              <p class="text-xs font-semibold text-slate-500 uppercase mb-2">Tipo de Cliente</p>
+              <div class="flex gap-2">
+                <button (click)="typeFilter.set('all')"
+                  class="flex-1 p-2 rounded-lg border flex justify-center items-center transition-colors"
+                  [class]="typeFilter() === 'all' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'"
+                  title="Todos">
+                  <i data-lucide="users" class="w-4 h-4"></i>
+                </button>
+                <button (click)="typeFilter.set('PF')"
+                  class="flex-1 p-2 rounded-lg border flex justify-center items-center transition-colors"
+                  [class]="typeFilter() === 'PF' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'"
+                  title="Pessoa Física">
+                  <i data-lucide="user" class="w-4 h-4"></i>
+                </button>
+                <button (click)="typeFilter.set('PJ')"
+                  class="flex-1 p-2 rounded-lg border flex justify-center items-center transition-colors"
+                  [class]="typeFilter() === 'PJ' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'"
+                  title="Pessoa Jurídica">
+                  <i data-lucide="building-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Status Filter -->
+            <div>
+              <p class="text-xs font-semibold text-slate-500 uppercase mb-2">Status</p>
+              <div class="flex gap-2">
+                <button (click)="statusFilter.set('all')"
+                  class="flex-1 p-2 rounded-lg border flex justify-center items-center transition-colors"
+                  [class]="statusFilter() === 'all' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'"
+                  title="Todos">
+                  <i data-lucide="list" class="w-4 h-4"></i>
+                </button>
+                <button (click)="statusFilter.set('Ativo')"
+                  class="flex-1 p-2 rounded-lg border flex justify-center items-center transition-colors"
+                  [class]="statusFilter() === 'Ativo' ? 'bg-emerald-50 border-emerald-200 text-emerald-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'"
+                  title="Ativo">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                </button>
+                <button (click)="statusFilter.set('Inativo')"
+                  class="flex-1 p-2 rounded-lg border flex justify-center items-center transition-colors"
+                  [class]="statusFilter() === 'Inativo' ? 'bg-red-50 border-red-200 text-red-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'"
+                  title="Inativo">
+                  <i data-lucide="x-circle" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region Table -->
+    <div #tableContainer class="flex-1 overflow-auto p-2 sm:p-4 lg:p-0 scrollbar-light">
+      <table class="w-full text-sm text-left text-slate-600">
+        <thead class="text-xs text-slate-700 uppercase bg-slate-50 lg:sticky top-0 z-10 hidden lg:table-header-group">
+          <tr>
+            <th scope="col" class="px-6 py-3 w-[5%] text-center">Tipo</th>
+            <th scope="col" class="px-6 py-3 w-[30%]">Nome</th>
+            <th scope="col" class="px-6 py-3 w-[25%]">Email</th>
+            <th scope="col" class="px-6 py-3 w-[15%]">Documento</th>
+            @if (!isCurrentUserViewer()) {
+            <th scope="col" class="px-6 py-3 w-[10%] text-center">Saldo</th>
+            }
+            <th scope="col" class="px-6 py-3 w-[10%] text-center">Status</th>
+            <th scope="col" class="px-6 py-3 text-center w-[5%] lg:align-middle">Ação</th>
+          </tr>
+        </thead>
+        <tbody class="block lg:table-row-group">
+          @if (loading()) {
+          @for (_ of [1,2,3,4,5,6,7,8,9,10]; track _) {
+          <tr class="block lg:table-row animate-pulse">
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-6 w-8 bg-slate-200 rounded-full mx-auto hidden lg:block"></div>
+            </td>
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-4 bg-slate-200 rounded"></div>
+            </td>
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-4 bg-slate-200 rounded"></div>
+            </td>
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-4 bg-slate-200 rounded"></div>
+            </td>
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-4 bg-slate-200 rounded"></div>
+            </td>
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-6 w-14 bg-slate-200 rounded-full mx-auto hidden lg:block"></div>
+            </td>
+            <td class="p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell">
+              <span class="lg:hidden h-4 w-12 bg-slate-200 rounded"></span>
+              <div class="h-4 w-4 bg-slate-200 rounded-full mx-auto hidden lg:block"></div>
+            </td>
+          </tr>
+          }
+          } @else {
+          @for (client of paginatedClients(); track client.id) {
+          <tr
+            class="block lg:table-row bg-white border border-slate-100 lg:border-b lg:border-slate-200 mb-3 sm:mb-4 lg:mb-0 rounded-xl lg:rounded-none shadow-sm lg:shadow-none hover:bg-slate-50 transition-colors animate-fade-in-slow">
+            <!-- Tipo -->
+            <td
+              class="p-3 sm:p-4 lg:p-0 lg:table-cell lg:px-6 lg:py-4 flex justify-between items-center lg:text-center border-b border-slate-100 lg:border-b-0">
+              <span class="font-semibold text-xs sm:text-sm text-slate-600 lg:hidden">Tipo</span>
+              <span class="px-2 py-1 text-[10px] sm:text-xs font-medium rounded-full"
+                [class]="client.type === 'PF' ? 'bg-blue-100 text-blue-900' : 'bg-teal-100 text-teal-900'">
+                {{ client.type }}
+              </span>
+            </td>
+            <!-- Nome -->
+            <td
+              class="p-3 sm:p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell font-medium text-slate-900 border-b border-slate-100 lg:border-b-0">
+              <span class="font-semibold text-xs sm:text-sm text-slate-600 lg:hidden">Nome</span>
+              <span class="truncate text-right lg:text-left text-xs sm:text-sm max-w-[180px] sm:max-w-none"
+                [title]="client.name">
+                {{ client.name }}
+              </span>
+            </td>
+            <!-- Email -->
+            <td
+              class="p-3 sm:p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell border-b border-slate-100 lg:border-b-0">
+              <span class="font-semibold text-xs sm:text-sm text-slate-600 lg:hidden">Email</span>
+              <span class="truncate text-right lg:text-left text-xs sm:text-sm max-w-[180px] sm:max-w-none"
+                [title]="client.email">
+                {{ client.email }}
+              </span>
+            </td>
+            <!-- Documento -->
+            <td
+              class="p-3 sm:p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell border-b border-slate-100 lg:border-b-0">
+              <span class="font-semibold text-xs sm:text-sm text-slate-600 lg:hidden">Documento</span>
+              <span class="text-xs sm:text-sm">{{ client.document }}</span>
+            </td>
+            @if (!isCurrentUserViewer()) {
+            <!-- Saldo -->
+            <td
+              class="p-3 sm:p-4 lg:px-6 lg:py-4 flex justify-between items-center lg:table-cell lg:text-center border-b border-slate-100 lg:border-b-0"
+              [class]="client.balance < 0 ? 'text-red-600' : 'text-slate-800'">
+              <span class="font-semibold text-xs sm:text-sm lg:hidden"
+                [class]="client.balance < 0 ? 'text-slate-600' : 'text-slate-600'">Saldo</span>
+              <div class="flex items-center justify-center gap-2">
+                @if (isBalanceVisible(client.id)) {
+                <span class="text-xs sm:text-sm animate-fade-in">{{ client.balance | currency:'BRL' }}</span>
+                <button (click)="toggleTableBalance(client.id)" aria-label="Ocultar saldo"
+                  class="text-slate-400 hover:text-slate-600 focus:outline-none" title="Ocultar saldo">
+                  <i data-lucide="eye-off" class="w-4 h-4"></i>
+                </button>
+                } @else {
+                <button (click)="toggleTableBalance(client.id)" aria-label="Visualizar saldo"
+                  class="text-slate-400 hover:text-slate-600 focus:outline-none" title="Visualizar saldo">
+                  <i data-lucide="eye" class="w-4 h-4"></i>
+                </button>
+                }
+              </div>
+            </td>
+            }
+            <!-- Status -->
+            <td
+              class="p-3 sm:p-4 lg:p-0 lg:table-cell lg:px-6 lg:py-4 flex justify-between items-center lg:text-center border-b border-slate-100 lg:border-b-0">
+              <span class="font-semibold text-xs sm:text-sm text-slate-600 lg:hidden">Status</span>
+              <span class="px-2 py-1 text-[10px] sm:text-xs font-medium rounded-full"
+                [class]="getStatusClass(client.status)">
+                {{ client.status }}
+              </span>
+            </td>
+            <!-- Ação -->
+            <td
+              class="p-3 sm:p-4 lg:p-0 lg:table-cell lg:px-6 lg:py-4 flex justify-between items-center lg:text-center lg:align-middle">
+              <span class="font-semibold text-xs sm:text-sm text-slate-600 lg:hidden">Ação</span>
+              @if (!isCurrentUserViewer()) {
+              <button (click)="openEditModal(client)" aria-label="Editar cliente"
+                class="text-emerald-600 hover:text-emerald-800" title="Editar Cliente">
+                <i data-lucide="edit" class="w-4 h-4"></i>
+              </button>
+              } @else {
+              <button (click)="openEditModal(client)" aria-label="Visualizar cliente"
+                class="text-slate-400 hover:text-slate-600" title="Visualizar Detalhes">
+                <i data-lucide="eye" class="w-4 h-4"></i>
+              </button>
+              }
+            </td>
+          </tr>
+          } @empty {
+          <tr class="block lg:table-row animate-fade-in-slow">
+            <td colspan="7" class="block lg:table-cell text-center py-16 px-6">
+              <div class="text-slate-600 flex flex-col items-center justify-center space-y-2">
+                <i data-lucide="search-x" class="w-10 h-10 text-slate-500"></i>
+                <h3 class="text-lg font-semibold text-slate-800">Nenhum cliente encontrado</h3>
+                <p class="text-sm">Tente ajustar os termos da sua consulta ou limpe a busca.</p>
+              </div>
+            </td>
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+    </div>
+    <!-- #endregion -->
+
+    <!-- #region Pagination -->
+    @if (totalPages() > 0 && !loading()) {
+    <nav
+      class="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 gap-3 sm:gap-4 border-t border-slate-100 flex-shrink-0 animate-fade-in-slow"
+      aria-label="Table navigation">
+      <span class="text-xs sm:text-sm font-normal text-slate-600 text-center sm:text-left">
+        Mostrando
+        <span class="font-semibold text-slate-900">{{ (currentPage() - 1) * itemsPerPage() + 1 }}-{{ (currentPage() - 1)
+          * itemsPerPage() + paginatedClients().length }}</span>
+        de
+        <span class="font-semibold text-slate-900">{{ filteredClients().length }}</span>
+      </span>
+      @if (totalPages() > 1) {
+      <ul class="inline-flex items-center -space-x-px">
+        <li>
+          <button (click)="prevPage()" [disabled]="currentPage() === 1"
+            class="block px-3 py-2 ml-0 leading-tight text-xs sm:text-sm text-slate-500 bg-white border border-slate-300 rounded-l-lg hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed">
+            Anterior
+          </button>
+        </li>
+        <li>
+          <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+            class="block px-3 py-2 leading-tight text-xs sm:text-sm text-slate-500 bg-white border border-slate-300 rounded-r-lg hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed">
+            Próximo
+          </button>
+        </li>
+      </ul>
+      }
+    </nav>
+    }
+    <!-- #endregion -->
+
+  </div>
+</div>
+
+<!-- #region Edit Client Modal -->
+@if (isEditModalOpen() && selectedClient(); as client) {
+<div class="fixed inset-0 bg-black bg-opacity-60 z-40 flex items-center justify-center animate-fade-in p-4">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden select-none"
+    (click)="$event.stopPropagation()" (copy)="$event.preventDefault()" (paste)="$event.preventDefault()"
+    (cut)="$event.preventDefault()">
+
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+          <i data-lucide="user-cog" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900">Editar Cliente</h3>
+          <p class="text-sm text-slate-500">ID: #{{ client.id }}</p>
+        </div>
+      </div>
+      <button (click)="closeEditModal()" aria-label="Fechar modal"
+        class="text-slate-400 hover:text-slate-600 transition-colors p-1 hover:bg-slate-100 rounded-lg">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-light">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Personal Data (Read-only) -->
+        <section class="h-full flex flex-col">
+          <h4 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>
+            Dados Pessoais
+          </h4>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-100 flex-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="col-span-full">
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Nome Completo</label>
+                <p class="text-slate-900 font-medium truncate" [title]="client.name">{{ client.name }}</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Documento ({{ client.type
+                  }})</label>
+                <p class="text-slate-900 font-medium font-mono">{{ client.document }}</p>
+              </div>
+              @if (!isCurrentUserViewer()) {
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Saldo Atual</label>
+                <div class="flex items-center gap-2">
+                  @if (isModalBalanceVisible()) {
+                  <p class="font-semibold animate-fade-in"
+                    [class]="client.balance < 0 ? 'text-red-600' : 'text-emerald-600'">
+                    {{ client.balance | currency:'BRL' }}
+                  </p>
+                  <button (click)="toggleModalBalance()" class="text-slate-400 hover:text-slate-600 focus:outline-none"
+                    title="Ocultar saldo">
+                    <i data-lucide="eye-off" class="w-4 h-4"></i>
+                  </button>
+                  } @else {
+                  <button (click)="toggleModalBalance()" class="text-slate-400 hover:text-slate-600 focus:outline-none"
+                    title="Visualizar saldo">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </button>
+                  }
+                </div>
+              </div>
+              }
+              <div class="col-span-full">
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Status</label>
+                <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [class]="getStatusClass(client.status)">
+                  {{ client.status }}
+                </span>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Data de Criação</label>
+                <p class="text-slate-900">{{ client.create_date | date:'dd/MM/yyyy' }}</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Data de Nascimento</label>
+                <p class="text-slate-900">{{ client.birth_date ? (client.birth_date | date:'dd/MM/yyyy') : 'Não
+                  informado' }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Address (Read-only) -->
+        <section class="h-full flex flex-col">
+          <h4 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i>
+            Endereço
+          </h4>
+          <div class="bg-white rounded-xl p-4 border border-slate-200 flex-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="col-span-full sm:col-span-2">
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Logradouro</label>
+                <p class="text-slate-900 truncate" [title]="client.address?.street">{{ client.address?.street || 'Não
+                  informado' }}</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Número</label>
+                <p class="text-slate-900">{{ client.address?.number || 'S/N' }}</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Bairro</label>
+                <p class="text-slate-900 truncate" [title]="client.address?.district">{{ client.address?.district ||
+                  'Não informado' }}</p>
+              </div>
+              <div class="col-span-full sm:col-span-2">
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Cidade/UF</label>
+                <p class="text-slate-900">
+                  {{ client.address?.city || 'Não informado' }}
+                  @if(client.address?.state) { / {{ client.address?.state }} }
+                </p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">CEP</label>
+                <p class="text-slate-900 font-mono">{{ client.address?.zipCode || 'Não informado' }}</p>
+              </div>
+              <div class="col-span-full sm:col-span-2">
+                <label class="block text-xs font-medium text-slate-500 uppercase mb-1">Complemento</label>
+                <p class="text-slate-900 italic">{{ client.address?.complement || 'Sem complemento' }}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Edit Form -->
+      <form [formGroup]="editClientForm" (ngSubmit)="saveClient()" id="edit-client-form">
+        <section>
+          <h4 class="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <i data-lucide="edit-3" class="w-4 h-4 text-slate-400"></i>
+            Editar Contato
+          </h4>
+          <div class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100">
+            <div class="flex flex-col lg:flex-row gap-4 items-start">
+              <div class="flex-1 w-full">
+                <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                <input type="email" id="email" formControlName="email" [readonly]="isCurrentUserViewer()"
+                  [class]="isCurrentUserViewer() ? 'block w-full px-3 py-2 bg-slate-50 text-slate-600 border border-slate-200 rounded-lg sm:text-sm cursor-not-allowed' : 'block w-full px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-shadow'">
+              </div>
+              <div class="flex-1 w-full">
+                <label for="telefone" class="block text-sm font-medium text-slate-700 mb-1">Telefone</label>
+                <input type="text" id="telefone" formControlName="telefone" (input)="formatPhoneInput($event)"
+                  (keydown)="onPhoneKeydown($event)" [readonly]="isCurrentUserViewer()"
+                  [class]="isCurrentUserViewer() ? 'block w-full px-3 py-2 bg-slate-50 text-slate-600 border border-slate-200 rounded-lg sm:text-sm cursor-not-allowed' : 'block w-full px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm transition-shadow'">
+              </div>
+              <div class="lg:self-end lg:pb-1 pt-2 lg:pt-0">
+                @if (!isCurrentUserViewer()) {
+                <button (click)="openResetConfirmationModal()" type="button"
+                  [title]="isCurrentUserAdmin() ? 'Reinicializar senha do cliente' : 'Ação disponível apenas para administradores'"
+                  class="text-sm font-medium flex items-center gap-2 text-emerald-600 hover:text-emerald-800 disabled:text-slate-400 disabled:cursor-not-allowed transition-colors px-3 py-2 rounded-lg hover:bg-emerald-100/50 border border-transparent hover:border-emerald-100">
+                  <i data-lucide="key-round" class="w-4 h-4"></i>
+                  <span class="whitespace-nowrap">Reinicializar senha</span>
+                </button>
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex items-center justify-between p-4 bg-slate-50 border-t border-slate-100 gap-3">
+      <div class="flex-1">
+        @if (!isCurrentUserViewer()) {
+        <button type="button" (click)="downloadReport()" aria-label="Gerar relatório do cliente"
+          class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors"
+          title="Gerar Relatório Completo do Cliente">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Gerar Relatório</span>
+        </button>
+        }
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" (click)="closeEditModal()"
+          class="px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+          Cancelar
+        </button>
+        @if (!isCurrentUserViewer()) {
+        <button type="submit" form="edit-client-form" [disabled]="editClientForm.invalid || !editClientForm.dirty"
+          class="px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+          Salvar Alterações
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+<!-- #endregion -->
+
+<!-- #region Password Reset Confirmation Modal -->
+@if (isResetConfirmationModalOpen() && selectedClient(); as client) {
+<div class="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center animate-fade-in p-4"
+  (click)="closeResetConfirmationModal()">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden select-none"
+    (click)="$event.stopPropagation()" (copy)="$event.preventDefault()" (paste)="$event.preventDefault()"
+    (cut)="$event.preventDefault()">
+    <div class="p-6 text-center">
+      <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 mb-6">
+        <i data-lucide="key-round" class="h-8 w-8 text-amber-600"></i>
+      </div>
+
+      <h3 class="text-xl font-bold text-slate-900 mb-2">Redefinir Senha de Acesso</h3>
+
+      <div class="text-sm text-slate-600 space-y-4">
+        <p>
+          Você está prestes a redefinir a senha do cliente <strong class="font-semibold text-slate-900">{{ client.name
+            }}</strong>.
+        </p>
+        <p>Abaixo está a nova senha temporária que ele deverá utilizar para entrar no sistema:</p>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+          <p class="font-mono text-lg font-bold text-slate-900 tracking-wider">Recicle@2026</p>
+        </div>
+        <p class="text-amber-600 bg-amber-50 p-3 rounded-lg text-xs border border-amber-100">
+          <i data-lucide="alert-triangle" class="w-3 h-3 inline mr-1"></i>
+          Depois de acessar com essa senha, oriente o cliente a criar uma nova senha pessoal para manter a conta segura.
+          Esta redefinição substitui a senha atual.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end p-4 bg-slate-50 border-t border-slate-100 gap-3">
+      <button type="button" (click)="closeResetConfirmationModal()"
+        class="flex-1 px-4 py-2 border border-slate-300 shadow-sm text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+        Cancelar
+      </button>
+      <button type="button" (click)="confirmPasswordReset()" [disabled]="resetConfirmCountdown() > 0"
+        class="flex-1 px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-wait transition-colors">
+        @if (resetConfirmCountdown() > 0) {
+        <span>Aguarde ({{ resetConfirmCountdown() }}s)</span>
+        } @else {
+        <span>Confirmar Redefinição</span>
+        }
+      </button>
+    </div>
+  </div>
+</div>
+}
+<!-- #endregion -->
