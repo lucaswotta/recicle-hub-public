@@ -1,0 +1,58 @@
+# =======================================================
+# CONFIGURAÇÕES PRINCIPAIS
+# =======================================================
+
+# Detectar automaticamente arquivos de texto e normalizar quebras de linha para LF
+* text=auto eol=lf
+
+# Definir explicitamente o comportamento para código-fonte
+*.ts text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.md text eol=lf
+
+# Scripts específicos para Windows
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Scripts Shell
+*.sh text eol=lf
+
+# =======================================================
+# SOBRESCRIÇÕES DO LINGUIST (ESTATÍSTICAS GITHUB)
+# =======================================================
+
+# Documentação e Configuração - Ocultar das estatísticas de linguagem
+*.md linguist-documentation
+*.json linguist-generated
+.gitignore linguist-generated
+.gitattributes linguist-generated
+.editorconfig linguist-generated
+.eslintrc.json linguist-generated
+tsconfig.json linguist-generated
+angular.json linguist-generated
+package.json linguist-generated
+package-lock.json linguist-generated
+yarn.lock linguist-generated
+LICENSE linguist-documentation
+
+# Artefatos de Build e Dependências
+node_modules/ linguist-vendored
+dist/ linguist-vendored
+coverage/ linguist-vendored
+.angular/ linguist-vendored
+backend/uploads/ linguist-vendored
+
+# Assets (Imagens, Fontes) - Binário
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.ttf binary
+*.woff binary
+*.woff2 binary
