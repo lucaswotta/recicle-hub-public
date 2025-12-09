@@ -134,19 +134,6 @@ Esta versão permite explorar a interface e experiência do usuário completa:
 
 ### Adaptações para Demo
 
-**Camada de Mocks:**
-```
-frontend/src/
-├── mocks/
-│   ├── clients.mock.ts       # 50+ clientes fictícios
-│   ├── dashboard.mock.ts     # Métricas e gráficos
-│   ├── reports.mock.ts       # Templates de relatórios
-│   ├── users.mock.ts         # Usuários do sistema
-│   └── audit-logs.mock.ts    # Histórico de ações
-└── services/
-    └── api.service.ts        # Intercepta chamadas e retorna mocks
-```
-
 **Removido:**
 - Conexões reais com banco de dados
 - Túnel SSH e credenciais sensíveis

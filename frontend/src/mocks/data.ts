@@ -77,12 +77,12 @@ export const MOCK_DASHBOARD = {
         newRegistrations
     },
     recyclingData: [
-        { month: 'Jan', value: 1200 },
-        { month: 'Fev', value: 1900 },
-        { month: 'Mar', value: 1500 },
-        { month: 'Abr', value: 2200 },
-        { month: 'Mai', value: 1800 },
-        { month: 'Jun', value: 2500 }
+        { month: 'Jan', value: 7400 },
+        { month: 'Fev', value: 8900 },
+        { month: 'Mar', value: 6500 },
+        { month: 'Abr', value: 7200 },
+        { month: 'Mai', value: 6950 },
+        { month: 'Jun', value: 8100 }
     ],
     registrationsData: [
         { date: '2023-01-15', value: 5 },
