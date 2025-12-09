@@ -1,52 +1,73 @@
 # =======================================================
-# CONFIGURAÇÕES PRINCIPAIS
+# CONFIGURAÇÕES GERAIS E NORMALIZAÇÃO
 # =======================================================
 
-# Detectar automaticamente arquivos de texto e normalizar quebras de linha para LF
+# Detectar automaticamente arquivos de texto e normalizar para LF
 * text=auto eol=lf
 
-# Definir explicitamente o comportamento para código-fonte
-*.ts text eol=lf
-*.js text eol=lf
-*.json text eol=lf
-*.html text eol=lf
-*.css text eol=lf
-*.scss text eol=lf
-*.md text eol=lf
-
-# Scripts específicos para Windows
+# Scripts específicos do Windows (preservar CRLF)
 *.bat text eol=crlf
 *.ps1 text eol=crlf
 
-# Scripts Shell
+# Scripts Shell (forçar LF)
 *.sh text eol=lf
 
 # =======================================================
-# SOBRESCRIÇÕES DO LINGUIST (ESTATÍSTICAS GITHUB)
+# LINGUIST: FOCO NO CÓDIGO (TYPESCRIPT / NODE)
 # =======================================================
 
-# Documentação e Configuração - Ocultar das estatísticas de linguagem
-*.md linguist-documentation
-*.json linguist-generated
-.gitignore linguist-generated
-.gitattributes linguist-generated
-.editorconfig linguist-generated
-.eslintrc.json linguist-generated
-tsconfig.json linguist-generated
-angular.json linguist-generated
-package.json linguist-generated
-package-lock.json linguist-generated
-yarn.lock linguist-generated
-LICENSE linguist-documentation
+# Forçar detecção de linguagens principais
+*.ts linguist-detectable=true
+*.js linguist-detectable=true
+*.tsx linguist-detectable=true
+*.jsx linguist-detectable=true
 
-# Artefatos de Build e Dependências
+# =======================================================
+# IGNORAR ARQUIVOS NAS ESTATÍSTICAS (POLUIÇÃO VISUAL)
+# =======================================================
+
+# Frontend - Ocultar Templates e Estilos (Angular/CSS)
+# Isso fará o repo parecer "Pure TypeScript/JavaScript" nas stats
+*.html linguist-vendored
+*.css linguist-vendored
+*.scss linguist-vendored
+*.less linguist-vendored
+
+# Configurações e Meta-arquivos
+*.json linguist-vendored
+.editorconfig linguist-vendored
+.gitattributes linguist-vendored
+.gitignore linguist-vendored
+.eslintrc* linguist-vendored
+.prettierrc* linguist-vendored
+browserslist linguist-vendored
+angular.json linguist-vendored
+tsconfig*.json linguist-vendored
+package.json linguist-vendored
+package-lock.json linguist-vendored
+yarn.lock linguist-vendored
+
+# Infraestrutura e Build (Node / Angular)
 node_modules/ linguist-vendored
 dist/ linguist-vendored
-coverage/ linguist-vendored
+frontend/dist/ linguist-vendored
+backend/dist/ linguist-vendored
 .angular/ linguist-vendored
-backend/uploads/ linguist-vendored
+coverage/ linguist-vendored
 
-# Assets (Imagens, Fontes) - Binário
+# Arquivos gerados e definições de tipo
+*.js.map linguist-vendored
+*.ts.map linguist-vendored
+*.d.ts linguist-vendored
+
+# =======================================================
+# ASSETS E BINÁRIOS
+# =======================================================
+
+# Tratar assets como vendored (opcional, remove das stats também)
+frontend/src/assets/* linguist-vendored
+
+# Definição de binários
 *.png binary
 *.jpg binary
 *.jpeg binary
@@ -56,3 +77,11 @@ backend/uploads/ linguist-vendored
 *.ttf binary
 *.woff binary
 *.woff2 binary
+*.eot binary
+
+# =======================================================
+# DOCUMENTAÇÃO
+# =======================================================
+LICENSE linguist-documentation
+README.md linguist-documentation
+CHANGELOG.md linguist-documentation
