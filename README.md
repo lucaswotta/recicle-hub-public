@@ -9,8 +9,7 @@ Demo pública do sistema que roda em produção no Grupo Barcelos. Dados fictíc
 [**Abrir a demo**](https://lucaswotta.github.io/recicle-hub-public/) ·
 [Funcionalidades](#funcionalidades) ·
 [Arquitetura](#arquitetura-em-produção) ·
-[Rodar localmente](#rodar-localmente) ·
-[Limitações](#limitações)
+[Rodar localmente](#rodar-localmente)
 
 <br>
 
@@ -105,12 +104,6 @@ frontend/src/app/
   mocks/         dados fictícios
 backend/         referência sanitizada: index.js, auth.js, db.js, routes/
 ```
-
-## Limitações
-
-- Sem persistência: recarregar a página restaura os dados fictícios.
-- Sem testes automatizados.
-- O backend não roda sem as variáveis de `backend/.env.example` e os bancos reais.
 
 ## Licença
 
